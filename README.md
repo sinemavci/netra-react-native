@@ -8,15 +8,6 @@ Netra provides a modern TypeScript API while leveraging native networking capabi
 
 > 📱 Check out the [example app](./example) for a full working demo.
 
-## Netra vs Axios
-
-Netra and Axios are designed with different goals.
-
-Axios is a popular HTTP client for JavaScript and React Native applications, providing a simple and flexible API for making HTTP requests.
-
-Netra focuses on building resilient network communication by providing built-in offline handling, request recovery, slow network strategies and request lifecycle management.
-
----
 
 ### Installation
 
@@ -31,6 +22,17 @@ yarn add netra-react-native
 ```
 
 ---
+
+## Netra vs Axios
+
+Netra and Axios are designed with different goals.
+
+Axios is a popular HTTP client for JavaScript and React Native applications, providing a simple and flexible API for making HTTP requests.
+
+Netra focuses on building resilient network communication by providing built-in offline handling, request recovery, slow network strategies and request lifecycle management.
+
+---
+
 | Feature | Netra | Axios |
 |---|---|---|
 | HTTP Methods | ✅ | ✅ |
