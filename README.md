@@ -1,5 +1,7 @@
 ## Netra React Native
 
+> ⚠️ **Platform Support:** Android only. iOS is not currently supported.
+
 Advanced networking SDK for React Native applications with offline support, slow network strategies, request lifecycle monitoring and streaming capabilities.
 
 Netra provides a modern TypeScript API while leveraging native networking capabilities underneath.
