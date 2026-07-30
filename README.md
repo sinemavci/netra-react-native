@@ -1,10 +1,10 @@
-# Netra React Native
+## Netra React Native
 
 Advanced networking SDK for React Native applications with offline support, slow network strategies, request lifecycle monitoring and streaming capabilities.
 
 Netra provides a modern TypeScript API while leveraging native networking capabilities underneath.
 
-# Netra vs Axios
+## Netra vs Axios
 
 Netra and Axios are designed with different goals.
 
@@ -18,17 +18,17 @@ Netra focuses on building resilient network communication by providing built-in 
 | TypeScript Support | ✅ SDK-level types | ✅ Type definitions |
 | Request Interceptors | ✅ | ✅ |
 | Response Interceptors | ✅ | ✅ |
-| Offline Request Queue | ✅ Built-in | ❌ Custom implementation required |
-| Queued Request Restoration | ✅ Built-in | ❌ Custom implementation required |
-| Retry Policies | ✅ Built-in | ⚠️ Requires interceptor/plugin |
-| Slow Network Strategies | ✅ Built-in | ⚠️ Custom handling required |
-| Request Lifecycle Events | ✅ Observer system | ⚠️ Interceptors |
-| Streaming API | ✅ Async stream API | ⚠️ Environment dependent |
+| Offline Request Queue | ✅ Built-in | Not included by default |
+| Queued Request Restoration | ✅ Built-in | Not included by default |
+| Retry Policies | ✅ Built-in | Requires interceptor/plugin |
+| Slow Network Strategies | ✅ Built-in | App-level implementation |
+| Request Lifecycle Events | ✅ Observer system | Available via interceptors |
+| Streaming API | ✅ Async stream API | Depends on environment |
 | Multipart Upload | ✅ | ✅ |
 | Serialization Support | ✅ Kotlinx / Gson / Moshi | ✅ Transformers |
-| Network Resilience Features | ✅ First-class | ⚠️ Application level |
+| Network Resilience Features | ✅ First-class | App-level implementation |
 
-## When to Choose Netra?
+### When to Choose Netra?
 
 Choose Netra when your React Native application needs:
 
@@ -48,9 +48,9 @@ Examples:
 
 ---
 
-## Different Design Approaches
+### Different Design Approaches
 
-### Axios
+#### Axios
 
 ```text
 React Native App
@@ -66,22 +66,22 @@ Axios provides a flexible HTTP layer. Additional behaviors such as retries, cach
 
 ---
 
-### Netra
+#### Netra
 
 ```text
 React Native App
         |
         |
- TypeScript API
+   TypeScript API
         |
         |
- Native Bridge
+   Native Bridge
         |
         |
- Native Networking Layer
+Native Networking Layer
         |
         |
- Android / iOS
+     Android
 ```
 
 Netra treats network reliability as a built-in capability:
@@ -92,7 +92,7 @@ Netra treats network reliability as a built-in capability:
 - Request observers
 - Queue restoration
 
-## Features
+### Features
 
 - 🚀 HTTP methods: GET, POST, PUT, PATCH, DELETE
 - 📦 Offline request queue
@@ -102,13 +102,13 @@ Netra treats network reliability as a built-in capability:
 - 💾 Smart caching support
 - 🌊 Streaming response support
 - 📤 Multipart upload support
-- 🔌 Native Android/iOS networking layer
+- 🔌 Native Android networking layer
 - 🧩 Multiple converter support
 - 🔒 Type-safe TypeScript API
 
 ---
 
-## Installation
+### Installation
 
 ```bash
 npm install netra-react-native
@@ -122,7 +122,7 @@ yarn add netra-react-native
 
 ---
 
-## Basic Usage
+### Basic Usage
 
 ```typescript
 import {
@@ -161,7 +161,7 @@ client.on(
 
 ---
 
-# Offline Request Queue
+## Offline Request Queue
 
 Netra can automatically queue requests when the device is offline.
 
@@ -186,7 +186,7 @@ When the network becomes available, queued requests can be restored and executed
 
 ---
 
-# Retry Strategy
+## Retry Strategy
 
 Netra supports configurable retry policies for unreliable networks.
 
@@ -214,7 +214,7 @@ Retry again
 
 ---
 
-# Slow Network Handling
+## Slow Network Handling
 
 Netra provides strategies for slow or unstable connections.
 
@@ -237,7 +237,7 @@ SlowNetworkPolicyAction.useCache()
 
 ---
 
-# Request Lifecycle Observers
+## Request Lifecycle Observers
 
 Monitor request lifecycle events.
 
@@ -267,7 +267,7 @@ Supported events:
 
 ---
 
-# Streaming
+## Streaming
 
 Netra supports streaming responses for large payloads.
 
@@ -295,7 +295,7 @@ Useful for:
 
 ---
 
-# Multipart Upload
+## Multipart Upload
 
 Upload files using multipart requests.
 
@@ -323,7 +323,7 @@ await client.post(options);
 
 ---
 
-# Converter Support
+## Converter Support
 
 Netra supports multiple serialization converters.
 
@@ -348,7 +348,7 @@ const client = new NetraClient({
 
 ---
 
-# Multiple Client Support
+## Multiple Client Support
 
 You can create multiple clients with different configurations.
 
@@ -377,7 +377,7 @@ const apiClient = new NetraClient({
 
 ---
 
-# Example Application
+## Example Application
 
 The example project demonstrates:
 
@@ -398,6 +398,6 @@ The JavaScript layer provides a clean developer experience while networking oper
 
 ---
 
-# License
+## License
 
 MIT License
