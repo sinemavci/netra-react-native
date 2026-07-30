@@ -6,6 +6,8 @@ Advanced networking SDK for React Native applications with offline support, slow
 
 Netra provides a modern TypeScript API while leveraging native networking capabilities underneath.
 
+> 📱 Check out the [example app](./example) for a full working demo.
+
 ## Netra vs Axios
 
 Netra and Axios are designed with different goals.
@@ -14,7 +16,6 @@ Axios is a popular HTTP client for JavaScript and React Native applications, pro
 
 Netra focuses on building resilient network communication by providing built-in offline handling, request recovery, slow network strategies and request lifecycle management.
 
-> 📱 Check out the [example app](./example) for a full working demo.
 ---
 
 ### Installation
@@ -378,29 +379,6 @@ const apiClient = new NetraClient({
 
 });
 ```
-
----
-
-## Example Application
-
-The example project demonstrates:
-
-- GitHub API integration
-- CRUD operations
-- Offline request queue
-- Retry policies
-- Slow network handling
-- Request observers
-- Streaming image download
-- Multipart image upload
-- Multiple converter usage
-
----
-
-
-The JavaScript layer provides a clean developer experience while networking operations are handled through native implementations.
-
----
 
 ## License
 
