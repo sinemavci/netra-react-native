@@ -14,6 +14,21 @@ Axios is a popular HTTP client for JavaScript and React Native applications, pro
 
 Netra focuses on building resilient network communication by providing built-in offline handling, request recovery, slow network strategies and request lifecycle management.
 
+---
+
+### Installation
+
+```bash
+npm install netra-react-native
+```
+
+or
+
+```bash
+yarn add netra-react-native
+```
+
+---
 | Feature | Netra | Axios |
 |---|---|---|
 | HTTP Methods | ✅ | ✅ |
@@ -107,20 +122,6 @@ Netra treats network reliability as a built-in capability:
 - 🔌 Native Android networking layer
 - 🧩 Multiple converter support
 - 🔒 Type-safe TypeScript API
-
----
-
-### Installation
-
-```bash
-npm install netra-react-native
-```
-
-or
-
-```bash
-yarn add netra-react-native
-```
 
 ---
 
