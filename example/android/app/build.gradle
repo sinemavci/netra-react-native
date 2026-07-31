@@ -107,11 +107,34 @@ android {
     }
 }
 
+allprojects {
+  repositories {
+    google()
+    mavenCentral()
+    // example/android/settings.gradle
+
+    maven {
+      url = uri("https://maven.pkg.github.com/sinemavci/netra")
+      credentials {
+        username = providers.gradleProperty("gpr.user")
+          .orElse(providers.environmentVariable("GPR_USER"))
+          .orElse(providers.environmentVariable("GITHUB_ACTOR"))
+          .orNull ?: ""
+        password = providers.gradleProperty("gpr.key")
+          .orElse(providers.environmentVariable("GPR_KEY"))
+          .orElse(providers.environmentVariable("GITHUB_TOKEN"))
+          .orNull ?: ""
+      }
+    }
+  }
+}
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    if (hermesEnabled.toBoolean()) {
+
+  if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor

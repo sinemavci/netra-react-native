@@ -3,5 +3,21 @@ plugins { id("com.facebook.react.settings") }
 extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
 rootProject.name = 'tempnetratest.example'
 include ':app'
-include ':netra'
+//include ':netra'
 includeBuild('../node_modules/@react-native/gradle-plugin')
+
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+  repositories {
+    google()
+    mavenCentral()
+
+    maven {
+      url = uri("https://maven.pkg.github.com/sinemavci/netra")
+      credentials {
+        username = settings.hasProperty("gpr.user") ? settings.getProperty("gpr.user") : System.getenv("GPR_USER")
+        password = settings.hasProperty("gpr.key") ? settings.getProperty("gpr.key") : System.getenv("GPR_KEY")
+      }
+    }
+  }
+}

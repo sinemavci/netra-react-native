@@ -16,6 +16,19 @@ buildscript {
   repositories {
     google()
     mavenCentral()
+    maven {
+      url = uri("https://maven.pkg.github.com/sinemavci/netra")
+      credentials {
+        username = providers.gradleProperty("gpr.user")
+          .orElse(providers.environmentVariable("GPR_USER"))
+          .orElse(providers.environmentVariable("GITHUB_ACTOR"))
+          .orNull ?: ""
+        password = providers.gradleProperty("gpr.key")
+          .orElse(providers.environmentVariable("GPR_KEY"))
+          .orElse(providers.environmentVariable("GITHUB_TOKEN"))
+          .orNull ?: ""
+      }
+    }
   }
 
   dependencies {
@@ -54,6 +67,6 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
   implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.0")
   api("com.google.code.gson:gson:2.10.1")
-  implementation project(path: ':netra')
+  implementation "com.netra:netra:1.0.0"
   implementation "com.facebook.react:react-android"
 }
