@@ -25,8 +25,6 @@ import com.netrareactnative.observers.StreamObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.text.contains
-import kotlin.text.get
 
 class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
   NativeNetraReactNativeSpec(reactContext) {
@@ -403,7 +401,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         requestBuilder.cancelWhenDestroyed()
       }
       val requestId = requestOptionsDto.id
-      streamObserverList[requestId] = StreamObserver(reactContext)
+      streamObserverList[requestId] = StreamObserver(reactContext, requestId)
 
       CoroutineScope(Dispatchers.IO).launch {
         requestBuilder.executeStream(

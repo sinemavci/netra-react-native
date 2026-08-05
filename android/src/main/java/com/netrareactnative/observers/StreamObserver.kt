@@ -3,13 +3,13 @@ package com.netrareactnative.observers
 import com.facebook.react.bridge.ReactContext
 import com.google.gson.Gson
 
-class StreamObserver(val reactContext: ReactContext) {
+class StreamObserver(val reactContext: ReactContext, val requestId: String) {
   private val jsonConverter = Gson()
 
   fun streamFailed() {
     NetraDeviceEventEmitter.sendEvent(
       reactContext,
-      "netra_stream_error",
+      "netra_stream_error${requestId}",
       jsonConverter.toJson(true)
     )
   }
@@ -17,7 +17,7 @@ class StreamObserver(val reactContext: ReactContext) {
   fun sendChunk(chunk: ByteArray) {
     NetraDeviceEventEmitter.sendEvent(
       reactContext,
-      "netra_stream_data",
+      "netra_stream_data${requestId}",
       jsonConverter.toJson(chunk)
     )
   }
@@ -25,7 +25,7 @@ class StreamObserver(val reactContext: ReactContext) {
   fun endOfStream() {
     NetraDeviceEventEmitter.sendEvent(
       reactContext,
-      "netra_stream_done",
+      "netra_stream_done${requestId}",
       jsonConverter.toJson(true)
     )
   }

@@ -133,19 +133,24 @@ export class NetraModuleHandler {
       const chunks: number[][] = [];
       let done = false;
       let error: Error | null = null;
+      this.emitter.addListener(
+        `netra_stream_data${requestOptions.id}`,
+        (chunk) => {
+          chunks.push(JSON.parse(chunk as string) as number[]);
+        }
+      );
 
-      this.emitter.addListener('netra_stream_data', (chunk) => {
-        chunks.push(JSON.parse(chunk as string) as number[]);
-      });
-
-      this.emitter.addListener('netra_stream_done', () => {
+      this.emitter.addListener(`netra_stream_done${requestOptions.id}`, () => {
         done = true;
       });
 
-      this.emitter.addListener('netra_stream_error', (e) => {
-        error = new Error('stream error', e);
-        done = true;
-      });
+      this.emitter.addListener(
+        `netra_stream_error${requestOptions.id}`,
+        (e) => {
+          error = new Error('stream error', e);
+          done = true;
+        }
+      );
 
       NetraReactNative.getStream(clientId, _requestOptions);
       while (!done) {
