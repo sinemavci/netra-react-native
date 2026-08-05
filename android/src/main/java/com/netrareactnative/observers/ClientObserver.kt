@@ -1,6 +1,5 @@
 package com.netrareactnative.observers
 
-import android.util.Log
 import com.example.netra_flutter.dto.RequestOptionsDTO
 import com.example.netra_flutter.dto.ResponseDTO
 import com.facebook.react.bridge.ReactContext
@@ -104,7 +103,6 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
 
   override fun onRequestChanged(event: RequestEvent) {
     val parsedEventName = event::class.simpleName
-    Log.e("", "listener events count: ${listenerEvents.count()}")
 
     if (listenerEvents.any { item -> item.value == parsedEventName }) {
       val sender = mutableMapOf(
@@ -129,13 +127,12 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
                 "response" to event.response?.let {
                   ResponseDTO.fromDataModel(it)
                 },
-//                                    "exception" to  //todo: netra exception
+                "exception" to event.exception?.message,
                 "request" to RequestOptionsDTO.fromDataModel(event.request.toConfig()),
               )
             }
           }
       )
-      Log.e("", "send event: ${clientId} -- ${sender}")
       NetraDeviceEventEmitter.sendEvent(
         reactContext,
         "ClientListener${clientId}",
@@ -177,7 +174,7 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
                 "response" to event.response?.let {
                   ResponseDTO.fromDataModel(it)
                 },
-//                                    "exception" to  //todo: netra exception
+                "exception" to event.exception?.message,
               )
             }
           }

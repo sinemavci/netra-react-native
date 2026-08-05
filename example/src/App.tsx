@@ -120,9 +120,9 @@ export default function App() {
       .then();
 
     mainClient
-      .on('RequestFailed', ({ response, request }) => {
+      .on('RequestFailed', ({ response, request, exception }) => {
         showSnackbar(
-          `❌ Failed request: ${request.url} due to code: ${response?.statusCode?.toString() ?? 'unknown'}`
+          `❌ Failed request: ${request.url} due to code: ${exception ?? response?.statusCode?.toString() ?? 'unknown'}`
         );
         console.log(
           `Failed response: ${request.url}`,
@@ -141,9 +141,9 @@ export default function App() {
       .then();
 
     githubClient
-      .on('RequestFailed', ({ response, request }) => {
+      .on('RequestFailed', ({ response, request, exception }) => {
         showSnackbar(
-          `❌ Failed request: ${request.url} due to code: ${response?.statusCode?.toString() ?? 'unknown'}`
+          `❌ Failed request: ${request.url} due to code: ${exception ?? response?.statusCode?.toString() ?? 'unknown'}`
         );
         console.log(
           `failed response: ${request.url}`,
@@ -162,13 +162,9 @@ export default function App() {
       .then();
 
     jsonPlaceholderClient
-      .on('RequestFailed', ({ response, request }) => {
+      .on('RequestFailed', ({ response, request, exception }) => {
         showSnackbar(
-          `❌ Failed request: ${request.url} due to code: ${response?.statusCode?.toString() ?? 'unknown'}`
-        );
-        console.log(
-          `failed response: ${request.url}`,
-          response?.data?.toString()
+          `❌ Failed request: ${request.url} due to code: ${exception ?? response?.statusCode?.toString() ?? 'unknown'}`
         );
       })
       .then();

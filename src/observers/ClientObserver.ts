@@ -56,6 +56,7 @@ export type ClientEventResponse = {
   QueuedRequestFailed: {
     url: string;
     response?: Response<Object | undefined>;
+    exception?: string;
   };
   QueuedRequestSuccess: {
     url: string;
@@ -74,6 +75,7 @@ export type ClientEventResponse = {
   RequestFailed: {
     request: RequestOptions;
     response?: Response<Object | undefined>;
+    exception?: string;
   };
   Offline: {};
   SlowNetwork: {};
@@ -159,6 +161,10 @@ export class ClientObserver {
               event.Value.response !== undefined
                 ? ResponseDTO.fromJSON(JSON.stringify(event.Value.response))
                 : undefined,
+            exception:
+              event.Value.exception !== undefined
+                ? event.Value.exception
+                : undefined,
           }),
           QueuedRequestSuccess: () => ({
             url: event.Value.url,
@@ -186,6 +192,10 @@ export class ClientObserver {
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
             ),
+            exception:
+              event.Value.exception !== undefined
+                ? event.Value.exception
+                : undefined,
             response:
               event.Value.response !== undefined
                 ? ResponseDTO.fromJSON(JSON.stringify(event.Value.response))
