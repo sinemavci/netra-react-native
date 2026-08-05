@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+- Fixed get multi stream chunk bug.
+- Added exception param to RequestFailed and QueuedRequestFailed events.
+
 ## 1.0.1
 
 Updates readme documentation.
