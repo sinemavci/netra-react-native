@@ -5,23 +5,6 @@ import { RequestOptionsDTO } from '../internal/dto/RequestOptionsDTO';
 import { ResponseDTO } from '../internal/dto/ResponseDTO';
 import uuid from 'react-native-uuid';
 
-export type ClientEventAllowedType =
-  | 'CacheHit'
-  | 'CacheMiss'
-  | 'CacheStored'
-  | 'CacheExpired'
-  | 'StaleCacheUsed'
-  | 'Offline'
-  | 'SlowNetwork'
-  | 'ConnectionRestored'
-  | 'RequestQueued'
-  | 'QueuedRequestFailed'
-  | 'QueuedRequestSuccess'
-  | 'QueuedRequestExecuted'
-  | 'RequestExecuted'
-  | 'RequestSuccess'
-  | 'RequestFailed';
-
 export type ClientEventResponse = {
   CacheHit: {
     request: RequestOptions;
@@ -82,13 +65,18 @@ export type ClientEventResponse = {
   ConnectionRestored: {};
 };
 
+type ObserverListenerMap<T> = {
+  [K in keyof T]: ObserverListener<T[K]>[];
+};
+
+type EventHandlerMap<T> = {
+  [K in keyof T]: () => T[K];
+};
+
 export class ClientObserver {
   private eventEmitter = new NativeEventEmitter(NativeModules.NetraReactNative);
 
-  private listeners: Record<
-    ClientEventAllowedType,
-    ObserverListener<ClientEventResponse[ClientEventAllowedType]>[]
-  > = {
+  private listeners: ObserverListenerMap<ClientEventResponse> = {
     CacheHit: [],
     CacheMiss: [],
     CacheStored: [],
@@ -111,33 +99,30 @@ export class ClientObserver {
       const event = JSON.parse(res);
       const name = event.EventName;
       if (Object.prototype.hasOwnProperty.call(this.listeners, name)) {
-        const eventHandlers: Record<
-          ClientEventAllowedType,
-          () => ClientEventResponse[ClientEventAllowedType]
-        > = {
+        const eventHandlers: EventHandlerMap<ClientEventResponse> = {
           CacheHit: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             ageMs: event.Value.ageMs,
             ttlMs: event.Value.ttlMs,
           }),
           CacheMiss: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
           }),
           CacheStored: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             ageMs: event.Value.ageMs,
             sizeByte: event.Value.ttlMs,
           }),
           CacheExpired: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             ageMs: event.Value.ageMs,
             ttlMs: event.Value.ttlMs,
             expiredByMs: event.Value.expiredByMs,
@@ -145,7 +130,7 @@ export class ClientObserver {
           StaleCacheUsed: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             ageMs: event.Value.ageMs,
             ttlMs: event.Value.ttlMs,
             expiredByMs: event.Value.expiredByMs,
@@ -159,7 +144,9 @@ export class ClientObserver {
             url: event.Value.url,
             response:
               event.Value.response !== undefined
-                ? ResponseDTO.fromJSON(JSON.stringify(event.Value.response))
+                ? ResponseDTO.fromJSON(
+                    JSON.stringify(event.Value.response)
+                  ).toDataModel()
                 : undefined,
             exception:
               event.Value.exception !== undefined
@@ -170,7 +157,7 @@ export class ClientObserver {
             url: event.Value.url,
             response: ResponseDTO.fromJSON(
               JSON.stringify(event.Value.response)
-            ),
+            ).toDataModel(),
           }),
           QueuedRequestExecuted: () => ({
             url: event.Value.url,
@@ -183,32 +170,34 @@ export class ClientObserver {
           RequestSuccess: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             response: ResponseDTO.fromJSON(
               JSON.stringify(event.Value.response)
-            ),
+            ).toDataModel(),
           }),
           RequestFailed: () => ({
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
-            ),
+            ).toDataModel(),
             exception:
               event.Value.exception !== undefined
                 ? event.Value.exception
                 : undefined,
             response:
               event.Value.response !== undefined
-                ? ResponseDTO.fromJSON(JSON.stringify(event.Value.response))
+                ? ResponseDTO.fromJSON(
+                    JSON.stringify(event.Value.response)
+                  ).toDataModel()
                 : undefined,
           }),
           Offline: () => ({}),
           SlowNetwork: () => ({}),
           ConnectionRestored: () => ({}),
         };
-        const handler = eventHandlers[name as ClientEventAllowedType];
+        const handler = eventHandlers[name as keyof ClientEventResponse];
         const response = handler ? handler() : {};
         if (Object.keys(response).length > 0) {
-          this.listeners[name as ClientEventAllowedType]?.forEach(
+          this.listeners[name as keyof ClientEventResponse]?.forEach(
             (observer: any) => {
               observer.callback(response);
             }
@@ -219,8 +208,8 @@ export class ClientObserver {
   }
 
   on(
-    event: ClientEventAllowedType,
-    callback: ObserverCallback<ClientEventResponse[ClientEventAllowedType]>
+    event: keyof ClientEventResponse,
+    callback: ObserverCallback<ClientEventResponse[keyof ClientEventResponse]>
   ): string | undefined {
     if (!Object.prototype.hasOwnProperty.call(this.listeners, event)) {
       this.listeners[event] = [];
@@ -231,8 +220,8 @@ export class ClientObserver {
   }
 
   off(
-    event: ClientEventAllowedType,
-    callback: ObserverCallback<ClientEventResponse[ClientEventAllowedType]>
+    event: keyof ClientEventResponse,
+    callback: ObserverCallback<ClientEventResponse[keyof ClientEventResponse]>
   ): string | undefined {
     if (Object.prototype.hasOwnProperty.call(this.listeners, event)) {
       const index = this.listeners[event]!.findIndex(

@@ -6,7 +6,6 @@ import { CircuitBreakerOptionsDTO } from '../internal/dto/CircuitBreakerOptionsD
 import type { ObserverCallback } from '../observers/ObserverListener';
 import {
   ClientObserver,
-  type ClientEventAllowedType,
   type ClientEventResponse,
 } from '../observers/ClientObserver';
 
@@ -110,13 +109,13 @@ export class NetraClient {
     yield* this.moduleHandler.getStream(this.id, requestOptions);
   }
 
-  async on<T extends ClientEventAllowedType>(
+  async on<T extends keyof ClientEventResponse>(
     eventName: T,
     callback: ObserverCallback<ClientEventResponse[T]>
   ) {
     await this.ensureInitialized();
     const eventId = this.clientObserver?.on(
-      eventName as ClientEventAllowedType,
+      eventName as keyof ClientEventResponse,
       callback as any
     );
     if (eventId !== undefined) {
@@ -124,13 +123,13 @@ export class NetraClient {
     }
   }
 
-  async off<T extends ClientEventAllowedType>(
+  async off<T extends keyof ClientEventResponse>(
     eventName: T,
     callback: ObserverCallback<ClientEventResponse[T]>
   ) {
     await this.ensureInitialized();
     const eventId = this.clientObserver?.off(
-      eventName as ClientEventAllowedType,
+      eventName as keyof ClientEventResponse,
       callback as any
     );
     if (eventId !== undefined) {
