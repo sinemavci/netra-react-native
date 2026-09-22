@@ -1,4 +1,4 @@
-package com.example.netra_flutter.dto
+package com.netrareactnative.dto
 
 data class CircuitBreakerOptionsDTO(
     val failureThreshold: Int? = 5,

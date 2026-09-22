@@ -1,7 +1,8 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { Response, type RequestOptions } from '../../models';
 import { RequestOptionsDTO } from '../dto/RequestOptionsDTO';
-import { ResponseDTO } from '../dto/ResponseDTO';
+import { ResponseQueuedDTO } from '../dto/ResponseQueuedDTO';
+import { ResponseReceivedDTO } from '../dto/ResponseReceivedDTO';
 import NetraReactNative from './NativeNetraReactNative';
 import { ExceptionManager } from '../../exceptions/ExceptionManager';
 
@@ -20,7 +21,11 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
+      if (JSON.parse(responseJson).queueOrder !== undefined) {
+        response = ResponseQueuedDTO.fromJSON(responseJson);
+      } else {
+        response = ResponseReceivedDTO.fromJSON(responseJson).toDataModel<T>();
+      }
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -39,7 +44,11 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
+      if (JSON.parse(responseJson).queueOrder !== undefined) {
+        response = ResponseQueuedDTO.fromJSON(responseJson);
+      } else {
+        response = ResponseReceivedDTO.fromJSON(responseJson).toDataModel<T>();
+      }
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -58,7 +67,11 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
+      if (JSON.parse(responseJson).queueOrder !== undefined) {
+        response = ResponseQueuedDTO.fromJSON(responseJson);
+      } else {
+        response = ResponseReceivedDTO.fromJSON(responseJson).toDataModel<T>();
+      }
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -77,7 +90,11 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
+      if (JSON.parse(responseJson).queueOrder !== undefined) {
+        response = ResponseQueuedDTO.fromJSON(responseJson);
+      } else {
+        response = ResponseReceivedDTO.fromJSON(responseJson).toDataModel<T>();
+      }
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -96,7 +113,11 @@ export class NetraModuleHandler {
         clientId,
         _requestOptions
       );
-      response = ResponseDTO.fromJSON(responseJson).toDataModel<T>();
+      if (JSON.parse(responseJson).queueOrder !== undefined) {
+        response = ResponseQueuedDTO.fromJSON(responseJson);
+      } else {
+        response = ResponseReceivedDTO.fromJSON(responseJson).toDataModel<T>();
+      }
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -173,7 +194,7 @@ export class NetraModuleHandler {
 
   async on(clientId: string, eventId: string, eventName: string) {
     try {
-      NetraReactNative.on(clientId, eventName, eventId);
+      await NetraReactNative.on(clientId, eventName, eventId);
     } catch (e) {
       throw ExceptionManager.parse(e);
     }
@@ -182,7 +203,7 @@ export class NetraModuleHandler {
 
   async off(clientId: string, eventId: string) {
     try {
-      NetraReactNative.off(clientId, eventId);
+      await NetraReactNative.off(clientId, eventId);
     } catch (e) {
       throw ExceptionManager.parse(e);
     }

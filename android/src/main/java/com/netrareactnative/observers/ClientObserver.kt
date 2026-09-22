@@ -1,7 +1,5 @@
 package com.netrareactnative.observers
 
-import com.example.netra_flutter.dto.RequestOptionsDTO
-import com.example.netra_flutter.dto.ResponseDTO
 import com.facebook.react.bridge.ReactContext
 import com.google.gson.Gson
 import com.netra.library.observers.CacheEvent
@@ -9,6 +7,8 @@ import com.netra.library.observers.INetraObserver
 import com.netra.library.observers.NetworkEvent
 import com.netra.library.observers.QueueEvent
 import com.netra.library.observers.RequestEvent
+import com.netrareactnative.dto.RequestOptionsDTO
+import com.netrareactnative.dto.ResponseReceivedDTO
 
 class ClientObserver(val reactContext: ReactContext, val clientId: String): INetraObserver {
   private val jsonConverter = Gson()
@@ -117,7 +117,7 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
 
             is RequestEvent.RequestSuccess -> {
               mutableMapOf(
-                "response" to ResponseDTO.fromDataModel(event.response),
+                "response" to ResponseReceivedDTO.fromDataModel(event.response),
                 "request" to RequestOptionsDTO.fromDataModel(event.request.toConfig()),
               )
             }
@@ -125,7 +125,7 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
             is RequestEvent.RequestFailed -> {
               mutableMapOf(
                 "response" to event.response?.let {
-                  ResponseDTO.fromDataModel(it)
+                  ResponseReceivedDTO.fromDataModel(it)
                 },
                 "exception" to event.exception?.message,
                 "request" to RequestOptionsDTO.fromDataModel(event.request.toConfig()),
@@ -164,7 +164,7 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
             is QueueEvent.QueuedRequestSuccess -> {
               mutableMapOf(
                 "url" to event.url,
-                "response" to ResponseDTO.fromDataModel(event.response),
+                "response" to ResponseReceivedDTO.fromDataModel(event.response),
               )
             }
 
@@ -172,7 +172,7 @@ class ClientObserver(val reactContext: ReactContext, val clientId: String): INet
               mutableMapOf(
                 "url" to event.url,
                 "response" to event.response?.let {
-                  ResponseDTO.fromDataModel(it)
+                  ResponseReceivedDTO.fromDataModel(it)
                 },
                 "exception" to event.exception?.message,
               )

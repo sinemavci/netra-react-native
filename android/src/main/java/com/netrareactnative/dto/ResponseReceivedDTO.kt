@@ -1,8 +1,8 @@
-package com.example.netra_flutter.dto
+package com.netrareactnative.dto
 
 import com.netra.library.NetraResponse
 
-data class ResponseDTO(
+data class ResponseReceivedDTO(
     val data: Any?,
     val statusCode: Int,
     val statusMessage: String?,
@@ -10,8 +10,8 @@ data class ResponseDTO(
     val headers: Map<String, String>?,
 ) {
     companion object {
-        fun<T> fromDataModel(response: NetraResponse<T>): ResponseDTO {
-            return ResponseDTO(
+        fun<T> fromDataModel(response: NetraResponse.ResponseReceived<T>): ResponseReceivedDTO {
+            return ResponseReceivedDTO(
                 data = response.data,
                 isCache = response.isCache,
                 statusCode = response.statusCode,
@@ -21,8 +21,8 @@ data class ResponseDTO(
         }
     }
 
-    fun toDataModel(): NetraResponse<Any?> {
-        return NetraResponse(
+    fun toDataModel(): NetraResponse.ResponseReceived<*> {
+        return NetraResponse.ResponseReceived(
             data = data,
             isCache = isCache,
             statusCode = statusCode,

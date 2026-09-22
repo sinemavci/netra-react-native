@@ -1,7 +1,7 @@
-import { Response } from '../../models/Response';
 import { BaseDTO } from './BaseDTO';
+import { ResponseReceived } from '../../models/Response';
 
-export class ResponseDTO extends BaseDTO {
+export class ResponseReceivedDTO extends BaseDTO {
   data?: unknown;
   statusCode?: number;
   statusMessage?: string;
@@ -20,8 +20,8 @@ export class ResponseDTO extends BaseDTO {
     this.headers = headers;
   }
 
-  static fromDataModel<T>(model: Response<T>): ResponseDTO {
-    return new ResponseDTO(
+  static fromDataModel<T>(model: ResponseReceived<T>): ResponseReceivedDTO {
+    return new ResponseReceivedDTO(
       model.data,
       model.statusCode,
       model.statusMessage,
@@ -31,7 +31,7 @@ export class ResponseDTO extends BaseDTO {
 
   static fromJSON(json: string) {
     const parsedJSON = JSON.parse(json);
-    return new ResponseDTO(
+    return new ResponseReceivedDTO(
       parsedJSON.data,
       parsedJSON.statusCode,
       parsedJSON.statusMessage,
@@ -39,8 +39,8 @@ export class ResponseDTO extends BaseDTO {
     );
   }
 
-  toDataModel<T>(): Response<T> {
-    return Response.fromRaw<T>({
+  toDataModel<T>(): ResponseReceived<T> {
+    return ResponseReceived.fromRaw<T>({
       data: this.data,
       statusCode: this.statusCode,
       statusMessage: this.statusMessage,

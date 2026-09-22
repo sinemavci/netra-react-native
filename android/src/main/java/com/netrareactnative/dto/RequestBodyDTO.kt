@@ -1,9 +1,7 @@
-package com.example.netra_flutter.dto
+package com.netrareactnative.dto
 
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.netra.library.Cache
 import com.netra.library.NetraPart
 import com.netra.library.NetraRequestBody
 import java.lang.reflect.Type

@@ -67,6 +67,6 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
   implementation("org.jetbrains.kotlin:kotlin-reflect:2.1.0")
   api("com.google.code.gson:gson:2.10.1")
-  implementation "com.netra:netra:1.0.0"
+  implementation "com.netra:netra:1.0.1"
   implementation "com.facebook.react:react-android"
 }

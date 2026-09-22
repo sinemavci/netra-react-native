@@ -1,9 +1,10 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
-import type { Response, RequestOptions } from '../models';
+import type { RequestOptions } from '../models';
 import { ObserverListener, type ObserverCallback } from './ObserverListener';
 import { RequestOptionsDTO } from '../internal/dto/RequestOptionsDTO';
-import { ResponseDTO } from '../internal/dto/ResponseDTO';
+import { ResponseReceivedDTO } from '../internal/dto/ResponseReceivedDTO';
 import uuid from 'react-native-uuid';
+import type { ResponseReceived } from '../models/Response';
 
 export type ClientEventResponse = {
   CacheHit: {
@@ -38,12 +39,12 @@ export type ClientEventResponse = {
   };
   QueuedRequestFailed: {
     url: string;
-    response?: Response<Object | undefined>;
+    response?: ResponseReceived<Object | undefined>;
     exception?: string;
   };
   QueuedRequestSuccess: {
     url: string;
-    response: Response<Object | undefined>;
+    response: ResponseReceived<Object | undefined>;
   };
   QueuedRequestExecuted: {
     url: string;
@@ -53,11 +54,11 @@ export type ClientEventResponse = {
   };
   RequestSuccess: {
     request: RequestOptions;
-    response: Response<Object | undefined>;
+    response: ResponseReceived<Object | undefined>;
   };
   RequestFailed: {
     request: RequestOptions;
-    response?: Response<Object | undefined>;
+    response?: ResponseReceived<Object | undefined>;
     exception?: string;
   };
   Offline: {};
@@ -95,7 +96,7 @@ export class ClientObserver {
   };
 
   constructor(clientId: string) {
-    this.eventEmitter.addListener(`ClientListener${clientId}`, (res: any) => {
+    this.eventEmitter.addListener(`ClientObserver${clientId}`, (res: any) => {
       const event = JSON.parse(res);
       const name = event.EventName;
       if (Object.prototype.hasOwnProperty.call(this.listeners, name)) {
@@ -144,7 +145,7 @@ export class ClientObserver {
             url: event.Value.url,
             response:
               event.Value.response !== undefined
-                ? ResponseDTO.fromJSON(
+                ? ResponseReceivedDTO.fromJSON(
                     JSON.stringify(event.Value.response)
                   ).toDataModel()
                 : undefined,
@@ -155,7 +156,7 @@ export class ClientObserver {
           }),
           QueuedRequestSuccess: () => ({
             url: event.Value.url,
-            response: ResponseDTO.fromJSON(
+            response: ResponseReceivedDTO.fromJSON(
               JSON.stringify(event.Value.response)
             ).toDataModel(),
           }),
@@ -171,7 +172,7 @@ export class ClientObserver {
             request: RequestOptionsDTO.fromJSON(
               JSON.stringify(event.Value.request)
             ).toDataModel(),
-            response: ResponseDTO.fromJSON(
+            response: ResponseReceivedDTO.fromJSON(
               JSON.stringify(event.Value.response)
             ).toDataModel(),
           }),
@@ -185,7 +186,7 @@ export class ClientObserver {
                 : undefined,
             response:
               event.Value.response !== undefined
-                ? ResponseDTO.fromJSON(
+                ? ResponseReceivedDTO.fromJSON(
                     JSON.stringify(event.Value.response)
                   ).toDataModel()
                 : undefined,

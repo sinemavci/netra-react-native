@@ -4,9 +4,6 @@ import android.Manifest
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresPermission
-import com.example.netra_flutter.dto.CircuitBreakerOptionsDTO
-import com.example.netra_flutter.dto.RequestOptionsDTO
-import com.example.netra_flutter.dto.ResponseDTO
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.google.gson.Gson
@@ -15,11 +12,16 @@ import com.netra.library.Cache
 import com.netra.library.NetraClient
 import com.netra.library.NetraClientList
 import com.netra.library.NetraRequestBody
+import com.netra.library.NetraResponse
 import com.netra.library.converter.NetraGsonConverter
 import com.netra.library.converter.NetraKotlinxConverter
 import com.netra.library.converter.NetraMoshiConverter
 import com.netra.library.enums.OfflinePolicyAction
 import com.netra.library.enums.SlowNetworkPolicyAction
+import com.netrareactnative.dto.CircuitBreakerOptionsDTO
+import com.netrareactnative.dto.RequestOptionsDTO
+import com.netrareactnative.dto.ResponseQueuedDTO
+import com.netrareactnative.dto.ResponseReceivedDTO
 import com.netrareactnative.observers.ClientObserver
 import com.netrareactnative.observers.StreamObserver
 import kotlinx.coroutines.CoroutineScope
@@ -71,13 +73,14 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
-            promise?.resolve(
-              jsonConverter.toJson(
-                ResponseDTO.fromDataModel(
-                  response
-                )
+            val model = if (response is NetraResponse.ResponseQueued) {
+              ResponseQueuedDTO.fromDataModel(response)
+            } else {
+              ResponseReceivedDTO.fromDataModel(
+                response as NetraResponse.ResponseReceived
               )
-            )
+            }
+            promise?.resolve(jsonConverter.toJson(model))
           } else if (exception != null) {
             promise?.reject(exception)
           }
@@ -128,13 +131,14 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
-            promise?.resolve(
-              jsonConverter.toJson(
-                ResponseDTO.fromDataModel(
-                  response
-                )
+            val model = if (response is NetraResponse.ResponseQueued) {
+              ResponseQueuedDTO.fromDataModel(response)
+            } else {
+              ResponseReceivedDTO.fromDataModel(
+                response as NetraResponse.ResponseReceived
               )
-            )
+            }
+            promise?.resolve(jsonConverter.toJson(model))
           } else if (exception != null) {
             promise?.reject(exception::class.qualifiedName, exception.message)
           }
@@ -185,13 +189,14 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
-            promise?.resolve(
-              jsonConverter.toJson(
-                ResponseDTO.fromDataModel(
-                  response
-                )
+            val model = if (response is NetraResponse.ResponseQueued) {
+              ResponseQueuedDTO.fromDataModel(response)
+            } else {
+              ResponseReceivedDTO.fromDataModel(
+                response as NetraResponse.ResponseReceived
               )
-            )
+            }
+            promise?.resolve(jsonConverter.toJson(model))
           } else if (exception != null) {
             promise?.reject(exception)
           }
@@ -245,14 +250,14 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
 
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
-            promise?.resolve(
-              jsonConverter.toJson(
-                ResponseDTO.fromDataModel(
-                  response
-                )
+            val model = if (response is NetraResponse.ResponseQueued) {
+              ResponseQueuedDTO.fromDataModel(response)
+            } else {
+              ResponseReceivedDTO.fromDataModel(
+                response as NetraResponse.ResponseReceived
               )
-            )
-
+            }
+            promise?.resolve(jsonConverter.toJson(model))
           } else if (exception != null) {
             promise?.reject(exception)
           }
@@ -304,13 +309,14 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
-            promise?.resolve(
-              jsonConverter.toJson(
-                ResponseDTO.fromDataModel(
-                  response
-                )
+            val model = if (response is NetraResponse.ResponseQueued) {
+              ResponseQueuedDTO.fromDataModel(response)
+            } else {
+              ResponseReceivedDTO.fromDataModel(
+                response as NetraResponse.ResponseReceived
               )
-            )
+            }
+            promise?.resolve(jsonConverter.toJson(model))
           } else if (exception != null) {
             promise?.reject(exception)
           }

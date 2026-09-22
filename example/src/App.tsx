@@ -19,6 +19,7 @@ import {
   RequestBody,
   RequestBodyPart,
   RequestOptions,
+  ResponseReceived,
   SlowNetworkPolicyAction,
 } from 'netra-react-native';
 import { TextEncoder } from 'text-encoding';
@@ -70,7 +71,7 @@ export default function App() {
   const showSnackbar = useCallback(
     (message: string, color: string = '#37474F') => {
       if (hideTimer.current) clearTimeout(hideTimer.current);
-      setSnackbar({ message, color });
+      setSnackbar({ message: message.slice(0, 400), color });
       Animated.timing(snackbarAnim, {
         toValue: 1,
         duration: 150,
@@ -98,6 +99,11 @@ export default function App() {
       })
       .then();
 
+    githubClient
+      .on('RequestExecuted', (result) => {
+        showSnackbar(`⚡ Executing on ${result.request.url}`);
+      })
+      .then();
     githubClient
       .on('RequestExecuted', (result) => {
         showSnackbar(`⚡ Executing on ${result.request.url}`);
@@ -195,7 +201,7 @@ export default function App() {
     mainClient
       .on('QueuedRequestSuccess', ({ url, response }) => {
         showSnackbar(
-          `⚡ Queued Request success:${url} response: ${JSON.stringify(response)}`
+          `⚡ Queued Request success:${url} response: ${JSON.stringify(response.data)}`
         );
       })
       .then();
@@ -203,7 +209,7 @@ export default function App() {
     githubClient
       .on('QueuedRequestSuccess', ({ url, response }) => {
         showSnackbar(
-          `⚡ Queued Request success:${url} response: ${JSON.stringify(response)}`
+          `⚡ Queued Request success:${url} response: ${JSON.stringify(response.data)}`
         );
       })
       .then();
@@ -211,7 +217,7 @@ export default function App() {
     jsonPlaceholderClient
       .on('QueuedRequestSuccess', ({ url, response }) => {
         showSnackbar(
-          `⚡ Queued Request success:${url} response: ${JSON.stringify(response)}`
+          `⚡ Queued Request success:${url} response: ${JSON.stringify(response.data)}`
         );
       })
       .then();
@@ -273,11 +279,18 @@ export default function App() {
           ),
         })
       );
-      setLastResult({
-        label: 'GET /?status=200',
-        statusCode: response?.statusCode,
-        data: JSON.stringify(response?.data?.slice(0, 2)),
-      });
+      if (response instanceof ResponseReceived) {
+        setLastResult({
+          label: 'GET /?status=200',
+          statusCode: response?.statusCode,
+          data: JSON.stringify(response?.data?.slice(0, 2)),
+        });
+      } else {
+        setLastResult({
+          label: 'GET /?status=200',
+          data: 'Response Queued',
+        });
+      }
     } catch (e: any) {
       setLastResult({
         label: 'GET /?status=200',
@@ -407,11 +420,18 @@ export default function App() {
       });
 
       const response = await mainClient.post(options);
-      setLastResult({
-        label: 'POST /upload',
-        statusCode: response?.statusCode,
-        data: JSON.stringify(response?.data),
-      });
+      if (response instanceof ResponseReceived) {
+        setLastResult({
+          label: 'POST /upload',
+          statusCode: response?.statusCode,
+          data: JSON.stringify(response?.data),
+        });
+      } else {
+        setLastResult({
+          label: 'POST /upload',
+          data: 'Response queued',
+        });
+      }
     } catch (e: any) {
       setLastResult({ label: 'POST /upload', error: e?.message ?? String(e) });
     } finally {
