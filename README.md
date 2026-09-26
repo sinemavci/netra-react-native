@@ -202,14 +202,14 @@ export class ResponseQueued extends Response<never> {
 | Variant | When you get it |
 |---|---|
 | `ResponseReceived` | The normal case — the request actually ran and you have a real response (online, or served from cache) |
-| `ResponseQueued` | The request was deferred instead of run immediately — either `offlinePolicyAction: OfflinePolicyAction.queue` was set and the device is offline, or `backgroundOptions` was set (see [Background Execution](#background-execution)) |
+| `ResponseQueued` | The request was deferred instead of run immediately — either `offlinePolicyAction: OfflinePolicyAction.queue` was set and the device is offline, or `backgroundOptions`) |
 
 
-> ⚠️ When `Execution Guaranteed Mode` is set, `ResponseQueued` is **always** returned — regardless of whether the device is online — because the request is handed off to a guaranteed background executor from the start rather than run inline. Listen to [Queue Events](#queue-events) to find out when it actually finishes.
+> ⚠️ When `Execution Guaranteed Mode` is set, `ResponseQueued` is **always** returned — regardless of whether the device is online — because the request is handed off to a guaranteed background executor from the start rather than run inline.
 
 ## Guaranteed Execution
 
-For requests that should survive the app being backgrounded or killed — large uploads, big downloads, anything you don't want lost if the user leaves mid-request — set `backgroundOptions`. The request is handed off to a guaranteed background executor immediately; `get`/`post`/etc. return `ResponseQueued` right away, and the real result arrives later through [Queue Events](#queue-events).
+For requests that should survive the app being backgrounded or killed — large uploads, big downloads, anything you don't want lost if the user leaves mid-request — set `backgroundOptions`. The request is handed off to a guaranteed background executor immediately; `get`/`post`/etc. return `ResponseQueued` right away, and the real result arrives later through [Queue Events].
 
 ```dart
 const response = await client.post(
