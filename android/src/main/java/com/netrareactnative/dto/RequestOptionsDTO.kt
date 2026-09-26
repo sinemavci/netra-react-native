@@ -13,6 +13,7 @@ data class RequestOptionsDTO(
     val headers: Map<String, String>?,
     val cancelOnDispose: Boolean? = false,
     val body: RequestBodyDTO?= null,
+    val executionMode: String?,
 ) {
     companion object {
         fun fromDataModel(config: NetraRequestConfig): RequestOptionsDTO {
@@ -33,6 +34,7 @@ data class RequestOptionsDTO(
                 body = config.body?.let {
                     RequestBodyDTO.fromDataModel(it)
                 },
+               executionMode = config.executionMode?.name
             )
         }
     }

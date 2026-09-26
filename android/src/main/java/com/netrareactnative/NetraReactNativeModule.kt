@@ -3,6 +3,7 @@ package com.netrareactnative
 import android.Manifest
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -16,6 +17,7 @@ import com.netra.library.NetraResponse
 import com.netra.library.converter.NetraGsonConverter
 import com.netra.library.converter.NetraKotlinxConverter
 import com.netra.library.converter.NetraMoshiConverter
+import com.netra.library.enums.ExecutionMode
 import com.netra.library.enums.OfflinePolicyAction
 import com.netra.library.enums.SlowNetworkPolicyAction
 import com.netrareactnative.dto.CircuitBreakerOptionsDTO
@@ -55,6 +57,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       val headers = requestOptionsDto?.headers
       val path = requestOptionsDto.url
       val cancelOnDispose = requestOptionsDto.cancelOnDispose
+      val backgroundMode = requestOptionsDto.executionMode == ExecutionMode.GUARANTEED.name
 
       if (client != null) {
         val requestBuilder =
@@ -70,6 +73,9 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         cancelOnDispose?.let {
           requestBuilder.cancelWhenDestroyed()
+        }
+        if (backgroundMode) {
+          requestBuilder.background()
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
@@ -113,6 +119,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       val headers = requestOptionsDto?.headers
       val path = requestOptionsDto.url
       val cancelOnDispose = requestOptionsDto.cancelOnDispose
+      val backgroundMode = requestOptionsDto.executionMode == ExecutionMode.GUARANTEED.name
 
       if (client != null) {
         val requestBuilder =
@@ -128,6 +135,9 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         cancelOnDispose?.let {
           requestBuilder.cancelWhenDestroyed()
+        }
+        if (backgroundMode) {
+          requestBuilder.background()
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
@@ -171,6 +181,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       val cache: Cache? = requestOptionsDto?.cacheOptions?.toDataModel()
       val path = requestOptionsDto.url
       val cancelOnDispose = requestOptionsDto.cancelOnDispose
+      val backgroundMode = requestOptionsDto.executionMode == ExecutionMode.GUARANTEED.name
 
       if (client != null) {
         val requestBuilder =
@@ -186,6 +197,9 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         cancelOnDispose?.let {
           requestBuilder.cancelWhenDestroyed()
+        }
+        if (backgroundMode) {
+          requestBuilder.background()
         }
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
@@ -230,6 +244,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       val headers = requestOptionsDto?.headers
       val path = requestOptionsDto.url
       val cancelOnDispose = requestOptionsDto.cancelOnDispose
+      val backgroundMode = requestOptionsDto.executionMode == ExecutionMode.GUARANTEED.name
 
       if (client != null) {
         val requestBuilder =
@@ -246,6 +261,9 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         }
         cancelOnDispose?.let {
           requestBuilder.cancelWhenDestroyed()
+        }
+        if (backgroundMode) {
+          requestBuilder.background()
         }
 
         requestBuilder.enqueue { response, exception ->
@@ -290,6 +308,7 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
       val headers = requestOptionsDto?.headers
       val path = requestOptionsDto.url
       val cancelOnDispose = requestOptionsDto.cancelOnDispose
+      val backgroundMode = requestOptionsDto.executionMode == ExecutionMode.GUARANTEED.name
 
       if (client != null) {
         val requestBuilder =
@@ -307,6 +326,10 @@ class NetraReactNativeModule(val reactContext: ReactApplicationContext) :
         cancelOnDispose?.let {
           requestBuilder.cancelWhenDestroyed()
         }
+        if (backgroundMode) {
+          requestBuilder.background()
+        }
+
         requestBuilder.enqueue { response, exception ->
           if (response != null) {
             val model = if (response is NetraResponse.ResponseQueued) {

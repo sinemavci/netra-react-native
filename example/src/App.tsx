@@ -1,15 +1,15 @@
 import 'react-native-get-random-values';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  Image,
-  ScrollView,
   ActivityIndicator,
-  SafeAreaView,
   Animated,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import {
   ConverterType,
@@ -25,6 +25,7 @@ import {
 import { TextEncoder } from 'text-encoding';
 import { encode } from 'base64-arraybuffer';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { ExecutionMode } from '../../src/models/ExecutionMode.ts';
 
 type RequestResult = {
   label: string;
@@ -277,6 +278,7 @@ export default function App() {
           slowNetworkPolicyAction: SlowNetworkPolicyAction.timeout(
             Duration.seconds(5)
           ),
+          executionMode: ExecutionMode.GUARANTEED,
         })
       );
       if (response instanceof ResponseReceived) {

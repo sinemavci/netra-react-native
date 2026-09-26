@@ -4,6 +4,7 @@ import { CacheOptions } from './CacheOptions';
 import type { RequestBody } from './RequestBody';
 import 'react-native-get-random-values';
 import uuid from 'react-native-uuid';
+import type { ExecutionMode } from './ExecutionMode';
 
 export interface RequestOptionsProps {
   url: string;
@@ -13,6 +14,7 @@ export interface RequestOptionsProps {
   headers?: Map<string, string>;
   cancelOnDispose?: boolean;
   body?: RequestBody;
+  executionMode?: ExecutionMode;
 }
 
 export class RequestOptions {
@@ -24,6 +26,7 @@ export class RequestOptions {
   headers?: Map<string, string>;
   cancelOnDispose?: boolean;
   body?: RequestBody;
+  executionMode?: ExecutionMode;
 
   constructor(props: RequestOptionsProps) {
     this.id = uuid.v4().toString();
@@ -34,5 +37,6 @@ export class RequestOptions {
     this.slowNetworkPolicyAction = props.slowNetworkPolicyAction;
     this.cacheOptions = props.cacheOptions ?? new CacheOptions();
     this.cancelOnDispose = props.cancelOnDispose ?? false;
+    this.executionMode = props.executionMode;
   }
 }

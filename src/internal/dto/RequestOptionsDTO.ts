@@ -4,6 +4,7 @@ import { SlowNetworkPolicyActionDTO } from './SlowNetworkPolicyActionDTO';
 import { CacheOptionsDTO } from './CacheOptionsDTO';
 import { RequestBodyDTO } from './RequestBodyDTO';
 import { RequestOptions } from '../../models';
+import { ExecutionMode } from '../../models/ExecutionMode';
 
 export class RequestOptionsDTO extends BaseDTO {
   id: string;
@@ -14,6 +15,7 @@ export class RequestOptionsDTO extends BaseDTO {
   headers?: Map<string, string>;
   cancelOnDispose?: boolean;
   body?: RequestBodyDTO;
+  executionMode?: string;
 
   constructor(
     id: string,
@@ -23,7 +25,8 @@ export class RequestOptionsDTO extends BaseDTO {
     cacheOptions?: CacheOptionsDTO,
     headers?: Map<string, string>,
     cancelOnDispose?: boolean,
-    body?: RequestBodyDTO
+    body?: RequestBodyDTO,
+    executionMode?: string
   ) {
     super();
     this.id = id;
@@ -34,6 +37,7 @@ export class RequestOptionsDTO extends BaseDTO {
     this.headers = headers;
     this.cancelOnDispose = cancelOnDispose;
     this.body = body;
+    this.executionMode = executionMode;
   }
 
   static fromDataModel(model: RequestOptions) {
@@ -55,7 +59,8 @@ export class RequestOptionsDTO extends BaseDTO {
       model.cancelOnDispose,
       model.body !== undefined
         ? RequestBodyDTO.fromDataModel(model.body)
-        : undefined
+        : undefined,
+      model.executionMode
     );
   }
 
@@ -81,7 +86,8 @@ export class RequestOptionsDTO extends BaseDTO {
       parsedJSON.cancelOnDispose,
       parsedJSON.body !== undefined
         ? RequestBodyDTO.fromJSON(JSON.stringify(parsedJSON.body))
-        : undefined
+        : undefined,
+      parsedJSON.executionMode
     );
   }
 
@@ -94,6 +100,10 @@ export class RequestOptionsDTO extends BaseDTO {
       headers: this.headers,
       cancelOnDispose: this.cancelOnDispose,
       body: this.body?.toDataModel(),
+      executionMode:
+        this.executionMode === ExecutionMode.GUARANTEED
+          ? ExecutionMode.GUARANTEED
+          : ExecutionMode.DIRECT,
     });
   }
 
@@ -107,6 +117,7 @@ export class RequestOptionsDTO extends BaseDTO {
       headers: this.headers,
       cancelOnDispose: this.cancelOnDispose,
       body: this.body?.toJSON(),
+      executionMode: this.executionMode,
     };
   }
 }
