@@ -59,6 +59,7 @@ Choose Netra when your React Native application needs:
 - Background synchronization
 - Request state monitoring
 - Advanced network policies
+- Guaranteed background execution for long-running requests
 
 Examples:
 
@@ -126,6 +127,7 @@ Netra treats network reliability as a built-in capability:
 - 🔌 Native Android networking layer
 - 🧩 Multiple converter support
 - 🔒 Type-safe TypeScript API
+- 🛡️ Guaranteed background execution for long-running requests
 
 ---
 
@@ -167,6 +169,79 @@ client.on(
 ```
 
 ---
+
+## Response Types
+
+The examples above assume the simple, common case — the request ran and you got real data back. But not every request finishes immediately: an offline-queued or background request hasn't run yet when the call returns. To make that explicit, Netra returns a sealed `NetraResponse<T>` with two variants:
+
+```typescript
+export class ResponseReceived<T> extends Response<T> {
+  data?: T;
+  statusCode?: number;
+  statusMessage?: string;
+  headers?: Record<string, string>;
+
+  constructor(props: ResponseReceivedProps<T>) {
+    super();
+    this.data = props.data;
+    this.statusCode = props.statusCode;
+    this.statusMessage = props.statusMessage;
+    this.headers = props.headers;
+  }
+}
+
+export class ResponseQueued extends Response<never> {
+  queueOrder: number;
+
+  constructor(props: ResponseQueuedProps) {
+    super();
+    this.queueOrder = props.queueOrder;
+  }
+}
+```
+| Variant | When you get it |
+|---|---|
+| `ResponseReceived` | The normal case — the request actually ran and you have a real response (online, or served from cache) |
+| `ResponseQueued` | The request was deferred instead of run immediately — either `offlinePolicyAction: OfflinePolicyAction.queue` was set and the device is offline, or `backgroundOptions` was set (see [Background Execution](#background-execution)) |
+
+
+> ⚠️ When `Execution Guaranteed Mode` is set, `ResponseQueued` is **always** returned — regardless of whether the device is online — because the request is handed off to a guaranteed background executor from the start rather than run inline. Listen to [Queue Events](#queue-events) to find out when it actually finishes.
+
+## Guaranteed Execution
+
+For requests that should survive the app being backgrounded or killed — large uploads, big downloads, anything you don't want lost if the user leaves mid-request — set `backgroundOptions`. The request is handed off to a guaranteed background executor immediately; `get`/`post`/etc. return `ResponseQueued` right away, and the real result arrives later through [Queue Events](#queue-events).
+
+```dart
+const response = await client.post(
+  new RequestOptions({
+    url: '/messages',
+
+    body: RequestBody.createJson(
+      JSON.stringify({
+        message: 'Hello',
+      })
+    ),
+    executionMode: ExecutionMode.GUARANTEED
+  })
+);
+
+// result is always ResponseQueued here
+```
+
+Listen for the eventual result the same way you'd listen for offline queue events:
+
+```typescript
+netraClient.on('QueuedRequestSuccess', ({ url, response }) => {
+  showSnackbar(
+    `⚡ Queued Request success:${url} response: ${JSON.stringify(response.data)}`
+  );
+})
+```
+
+> Combining `backgroundOptions` with `offlinePolicyAction` is allowed but redundant — `backgroundOptions` already defers the request unconditionally, so the offline policy is never evaluated in that case.
+
+---
+
 
 ## Offline Request Queue
 
